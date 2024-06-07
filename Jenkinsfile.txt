@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'branchName', defaultValue: '*/master', description: 'Branch to build')
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo "Build stage."
+                git branch: "${params.branchName}", url: 'https://github.com/JaneSych/RestAssure'
+                withMaven {
+                    sh "mvn clean verify"
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo "Test stage."
+                withMaven {
+                    sh "mvn test"
+                }
+            }
+        }
+        stage('Report') {
+            steps {
+                echo "Report stage."
+                script {
+                    allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'target/allure-results/*', fingerprint: true
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'The pipeline completed successfully!'
+        }
+        failure {
+            echo 'The pipeline failed!'
+        }
+    }
+}
