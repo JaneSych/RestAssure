@@ -1,10 +1,12 @@
 pipeline {
     agent any
-
+    tools {
+        maven: 'Maven'
+        jdk 'JDK11'
+    }
     parameters {
         string(name: 'branchName', defaultValue: '*/master', description: 'Branch to build')
     }
-
     stages {
         stage('Build') {
             steps {
