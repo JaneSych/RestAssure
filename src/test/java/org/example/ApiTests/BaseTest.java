@@ -1,5 +1,6 @@
 package org.example.ApiTests;
 
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.SSLConfig;
@@ -12,6 +13,7 @@ import static io.restassured.config.RestAssuredConfig.config;
 public class BaseTest {
     private final RequestSpecification requestSpec = new RequestSpecBuilder()
             .setBaseUri("https://reqres.in/api")
+            .addFilter(new AllureRestAssured())
             .setConfig(config().sslConfig(new SSLConfig().relaxedHTTPSValidation()))
             .setContentType(ContentType.JSON)
             .build();
