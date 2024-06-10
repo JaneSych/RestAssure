@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven'
-    }
     parameters {
         string(name: 'branchName', defaultValue: '*/master', description: 'Branch to build')
     }
@@ -11,17 +8,13 @@ pipeline {
             steps {
                 echo "Build stage."
                 git branch: "${params.branchName}", url: 'https://github.com/JaneSych/RestAssure'
-                withMaven {
-                    sh "mvn clean verify"
-                }
+                sh 'mvn -B -DskipTests clean package'
             }
         }
         stage('Test') {
             steps {
                 echo "Test stage."
-                withMaven {
-                    sh "mvn test"
-                }
+                sh 'mvn test'
             }
         }
         stage('Report') {
