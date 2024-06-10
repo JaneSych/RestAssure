@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        maven: 'Maven'
+        maven 'Maven'
     }
     parameters {
         string(name: 'branchName', defaultValue: '*/master', description: 'Branch to build')
