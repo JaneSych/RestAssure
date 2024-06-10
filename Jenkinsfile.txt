@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "Maven"
+    }
     parameters {
         string(name: 'branchName', defaultValue: '*/master', description: 'Branch to build')
     }
@@ -7,14 +11,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Build stage."
-                git branch: "${params.branchName}", url: 'https://github.com/JaneSych/RestAssure'
-                sh 'mvn -B -DskipTests clean package'
+                git branch: "${params.branchName}", url: 'https://github.com/JaneSych/RestAssure.git'
+                bat "mvn clean package"
             }
         }
         stage('Test') {
             steps {
                 echo "Test stage."
-                sh 'mvn test'
+                bat "mvn test"
             }
         }
         stage('Report') {
